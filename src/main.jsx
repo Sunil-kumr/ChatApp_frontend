@@ -4,8 +4,8 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
 
-import { AuthProvider } from "./context/AuthContext.jsx";
-import { ChatProvider } from "./context/ChatContext.jsx";
+import { AuthProvider } from "./context/AuthContext";
+import { ChatProvider } from "./context/ChatContext";
 
 const root = createRoot(document.getElementById("root"));
 

@@ -30,10 +30,14 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`bg-[#8185B2]/10 h-full p-5 rounded-r-xl overflow-y-scroll text-white ${
-        selectedUser ? "max-md:hidden" : ""
-      }`}
-    >
+    
+  className={`bg-gradient-to-b from-[#1f1c3a] via-[#2b2450] to-[#1a1833]
+  h-full p-5 rounded-r-xl overflow-y-scroll text-white ${
+    selectedUser ? "max-md:hidden" : ""
+  }`}
+>
+
+    
       {/* Top */}
       <div className="pb-5">
         <div className="flex justify-between items-center">
@@ -119,7 +123,7 @@ const Sidebar = () => {
         />
         <p className="text-sm">{authUser?.fullName}</p>
       </div>
-    </div>
+    </>
   );
 };
 
