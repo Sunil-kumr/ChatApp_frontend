@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import assets from "../assets/assets";
-import { AuthContext } from "../context/Authcontext";
+import { AuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
 const ProfilePage = () => {

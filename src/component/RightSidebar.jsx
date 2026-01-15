@@ -1,26 +1,25 @@
 import React, { useContext, useMemo } from "react";
 import assets from "../assets/assets";
-import { AuthContext } from "../context/Authcontext";
+import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
 
 const RightSidebar = () => {
   const { authUser, logout, onlineUsers } = useContext(AuthContext);
   const { selectedUser, messages } = useContext(ChatContext);
 
-  // Hide RightSidebar if no user selected
-  if (!selectedUser) return null;
-
-  // Check if selected user is online
-  const isOnline = onlineUsers.includes(selectedUser._id);
-
-  // Extract image messages (media gallery)
+  // ✅ hooks are already at top (NO RULES OF HOOKS VIOLATION)
   const mediaImages = useMemo(() => {
     return messages
       .filter((msg) => msg.image)
       .map((msg) => msg.image)
-      .slice(-6) // Show last 6 only
+      .slice(-6)
       .reverse();
   }, [messages]);
+
+  // Hide RightSidebar if no user selected
+  if (!selectedUser) return null;
+
+  const isOnline = onlineUsers.includes(selectedUser._id);
 
   return (
     <div className="h-full w-full bg-[#181A2A]/80 flex flex-col rounded-l-2xl overflow-hidden">
@@ -28,7 +27,7 @@ const RightSidebar = () => {
       <div className="flex flex-col items-center py-8 border-b border-[#282142]">
         <div className="relative">
           <img
-            src={selectedUser?.avatar || assets.profile_martin}
+            src={selectedUser?.profilePicture || assets.profile_martin}
             alt="Profile"
             className="w-24 h-24 rounded-full object-cover border-4 border-[#6C63FF] mb-3"
           />
@@ -70,20 +69,18 @@ const RightSidebar = () => {
 
       {/* --- Logout Section --- */}
       <div className="px-6 pb-6 mt-auto">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <img
-              src={authUser?.avatar || assets.profile_martin}
-              alt="You"
-              className="w-8 h-8 rounded-full object-cover border border-[#6C63FF]"
-            />
-            <p className="text-white text-sm">{authUser?.fullName || "You"}</p>
-          </div>
+        <div className="flex items-center gap-2 mb-3">
+          <img
+            src={authUser?.profilePicture || assets.profile_martin}
+            alt="You"
+            className="w-8 h-8 rounded-full object-cover border border-[#6C63FF]"
+          />
+          <p className="text-white text-sm">{authUser?.fullName || "You"}</p>
         </div>
 
         <button
           onClick={logout}
-          className="w-full py-2 rounded-full bg-gradient-to-r from-[#a084ee] to-[#6C63FF] 
+          className="w-full py-2 rounded-full bg-gradient-to-r from-[#a084ee] to-[#6C63FF]
                      text-white font-semibold text-lg shadow-lg hover:scale-105 transition-transform duration-200"
         >
           Logout

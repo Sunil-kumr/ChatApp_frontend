@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 import assets from "../assets/assets";
 import { formatMessageTime } from "../library/utils";
 import { ChatContext } from "../context/ChatContext";
-import { AuthContext } from "../context/Authcontext";
+import { AuthContext } from "../context/AuthContext";
 
 const ChatContainer = () => {
   const { selectedUser, setSelectedUser, messages, getMessages, sendMessage } =
@@ -14,59 +14,38 @@ const ChatContainer = () => {
   const isUserAtBottom = useRef(true);
   const [input, setInput] = useState("");
 
-  // 🟣 Fetch messages when a new user is selected
   useEffect(() => {
-    if (selectedUser) {
-      getMessages(selectedUser._id);
-
-      // Scroll to bottom after messages load (delay ensures DOM is ready)
-      setTimeout(() => {
-        if (messageContainerRef.current) {
-          messageContainerRef.current.scrollTop =
-            messageContainerRef.current.scrollHeight;
-        }
-      }, 200);
-    }
+    if (selectedUser) getMessages(selectedUser._id);
   }, [selectedUser]);
 
-  // 🟣 Track scroll position (to detect if user is near bottom)
-  const handleScroll = () => {
-    if (!messageContainerRef.current) return;
-    const { scrollTop, scrollHeight, clientHeight } = messageContainerRef.current;
-    const atBottom = scrollHeight - scrollTop - clientHeight < 50;
-    isUserAtBottom.current = atBottom;
-  };
-
-  // 🟣 Scroll to bottom only when near bottom or sending/receiving a message
   useEffect(() => {
     if (isUserAtBottom.current) {
       scrollEnd.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
-  // 🟣 Send text message
   const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
     await sendMessage(input);
     setInput("");
-    isUserAtBottom.current = true; // force scroll down next update
+    isUserAtBottom.current = true;
   };
 
-  // 🟣 Send image
-  const handleImageSend = async (e) => {
+  // ✅ BASE64 IMAGE SEND (NO MULTER)
+  const handleImageSend = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = async (ev) => {
-      await sendMessage("", ev.target.result);
+    reader.onloadend = async () => {
+      await sendMessage("", reader.result); // base64
       isUserAtBottom.current = true;
     };
     reader.readAsDataURL(file);
+    e.target.value = "";
   };
 
-  // 🟣 If no user selected
   if (!selectedUser) {
     return (
       <div className="flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 max-md:hidden">
@@ -76,10 +55,9 @@ const ChatContainer = () => {
     );
   }
 
-  // 🟣 UI
   return (
     <div className="h-full flex flex-col backdrop-blur-lg relative">
-      {/* ===== Header ===== */}
+      {/* Header */}
       <div className="flex items-center gap-3 py-3 px-4 border-b border-stone-500 bg-[#1e1e2f] sticky top-0 z-10">
         <img
           src={selectedUser.avatar || assets.profile_martin}
@@ -94,7 +72,7 @@ const ChatContainer = () => {
                 ? "bg-green-500"
                 : "bg-gray-500"
             }`}
-          ></span>
+          />
         </p>
         <img
           onClick={() => setSelectedUser(null)}
@@ -102,13 +80,11 @@ const ChatContainer = () => {
           alt=""
           className="md:hidden max-w-7 cursor-pointer"
         />
-        <img src={assets.help_icon} alt="" className="max-md:hidden max-w-5" />
       </div>
 
-      {/* ===== Messages ===== */}
+      {/* Messages */}
       <div
         ref={messageContainerRef}
-        onScroll={handleScroll}
         className="flex-1 overflow-y-auto p-3 pb-6 scroll-smooth"
       >
         {messages.map((message, index) => {
@@ -120,17 +96,6 @@ const ChatContainer = () => {
                 isMe ? "justify-end" : "justify-start"
               }`}
             >
-              <img
-                src={
-                  isMe
-                    ? authUser.avatar || assets.profile_martin
-                    : selectedUser.avatar || assets.profile_martin
-                }
-                alt=""
-                className={`w-8 h-8 rounded-full self-end ${
-                  isMe ? "ml-2" : "mr-2"
-                }`}
-              />
               <div
                 className={`flex flex-col max-w-[70%] ${
                   isMe ? "items-end" : "items-start"
@@ -139,14 +104,10 @@ const ChatContainer = () => {
                 {message.image ? (
                   <img
                     src={message.image}
-                    className="max-w-[230px] border border-gray-700 rounded-lg overflow-hidden mb-1"
+                    className="max-w-[230px] rounded-lg mb-1"
                   />
                 ) : (
-                  <p
-                    className={`p-2 md:text-sm font-light rounded-lg break-all bg-violet-500/30 text-white mb-1 ${
-                      isMe ? "rounded-br-none" : "rounded-bl-none"
-                    }`}
-                  >
+                  <p className="p-2 text-sm rounded-lg bg-violet-500/30 text-white mb-1">
                     {message.text}
                   </p>
                 )}
@@ -157,54 +118,31 @@ const ChatContainer = () => {
             </div>
           );
         })}
-        <div ref={scrollEnd}></div>
+        <div ref={scrollEnd} />
       </div>
 
-      {/* ===== Input Bar ===== */}
+      {/* Input */}
       <form
-        className="p-4 flex items-center gap-2 bg-[#1e1e2f] sticky bottom-0"
+        className="p-4 flex items-center gap-2 bg-[#1e1e2f]"
         onSubmit={handleSend}
       >
-        <div className="flex items-center w-full bg-[#23232f] rounded-full px-4 py-2">
+        <input
+          type="text"
+          className="flex-1 bg-transparent outline-none text-white"
+          placeholder="Send a message"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <label>
           <input
-            type="text"
-            className="flex-1 bg-transparent border-none outline-none text-white placeholder-gray-400"
-            placeholder="Send a message"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageSend}
           />
-          <label className="cursor-pointer flex items-center ml-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 text-gray-400 hover:text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="4" strokeWidth="2" />
-              <path d="M8 12h8M12 8v8" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageSend}
-            />
-          </label>
-          <button
-            type="submit"
-            className="ml-2 bg-violet-600 hover:bg-violet-700 text-white w-9 h-9 flex items-center justify-center rounded-full"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
-              fill="white"
-              viewBox="0 0 24 24"
-            >
-              <path d="M2 21l21-9-21-9v7l15 2-15 2z" />
-            </svg>
-          </button>
-        </div>
+          📷
+        </label>
+        <button type="submit">➤</button>
       </form>
     </div>
   );

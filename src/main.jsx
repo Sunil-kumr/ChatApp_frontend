@@ -1,12 +1,13 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App.jsx';
-import './index.css';
-import { AuthProvider } from './context/Authcontext.jsx';  // lowercase "c"
-import { ChatProvider } from './context/ChatContext.jsx';  // make sure this file exists
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App.jsx";
+import "./index.css";
 
-const root = createRoot(document.getElementById('root'));
+import { AuthProvider } from "./context/AuthContext.jsx";
+import { ChatProvider } from "./context/ChatContext.jsx"; // ✅ ADD THIS
+
+const root = createRoot(document.getElementById("root"));
 
 root.render(
   <BrowserRouter>
