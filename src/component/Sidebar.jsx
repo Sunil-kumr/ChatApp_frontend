@@ -31,7 +31,7 @@ const Sidebar = () => {
   return (
     <div
     
-  className={`bg-gradient-to-b from-[#1f1c3a] via-[#2b2450] to-[#1a1833]
+  className={`bg-gradient-to-b from-[#3e30bf] via-[#574f7d] to-[#1a1833]
   h-full p-5 rounded-r-xl overflow-y-scroll text-white ${
     selectedUser ? "max-md:hidden" : ""
   }`}
