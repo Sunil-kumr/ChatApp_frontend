@@ -8,9 +8,13 @@ const HomePage = () => {
   const { selectedUser } = useContext(ChatContext);
 
   return (
-    <div className="border w-full h-screen sm:px-[15%] sm:py-[5%]">
+    // 🌈 SAME BACKGROUND AS LOGIN PAGE
+    <div className="min-h-screen bg-gradient-to-br from-[#0F172A] via-[#232231] to-[#592f9c] flex items-center justify-center sm:px-[15%] sm:py-[5%]">
+      
+      {/* Glass container */}
       <div
-        className={`border rounded-2xl h-full grid ${
+        className={`w-full h-full rounded-2xl border border-white/20 
+        bg-white/10 backdrop-blur-xl shadow-2xl grid ${
           selectedUser
             ? "md:grid-cols-[250px_1fr_250px]"
             : "md:grid-cols-[350px_1fr]"
@@ -20,6 +24,7 @@ const HomePage = () => {
         <ChatContainer />
         <RightSidebar />
       </div>
+
     </div>
   );
 };

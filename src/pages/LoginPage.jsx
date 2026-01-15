@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { AuthContext } from "../context/AuthContext"; // ✅ FIXED CASE
+import { AuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
 const LoginPage = () => {
@@ -60,11 +59,18 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white relative overflow-hidden">
-      <div className="bg-white rounded-2xl border-yellow-900 p-8 w-full max-w-md">
-        <h2 className="text-black text-2xl text-center mb-4">
-          {isSignup ? "Sign up" : "Sign in"}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0F172A] via-[#292939] to-[#6D28D9]">
+
+    <div className="bg-white backdrop-blur-xl rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] p-8 w-full max-w-md border border-white/20">
+
+        <h2 className="text-gray-900 text-3xl font-bold text-center mb-2">
+          {isSignup ? "Create Account" : "Welcome Back"}
         </h2>
+        <p className="text-gray-500 text-center mb-6">
+          {isSignup
+            ? "Join QuickChat and start chatting"
+            : "Sign in to continue chatting"}
+        </p>
 
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           {isSignup && (
@@ -73,14 +79,16 @@ const LoginPage = () => {
               placeholder="Full Name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
+              className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
           )}
 
           <input
             type="email"
-            placeholder="Email"
+            placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
 
           <input
@@ -88,16 +96,32 @@ const LoginPage = () => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
 
-          <button disabled={loading} type="submit">
-            {loading ? "Please wait..." : isSignup ? "Create Account" : "Sign In"}
+          <button
+            disabled={loading}
+            type="submit"
+            className="mt-2 w-full py-3 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold text-lg hover:opacity-90 transition disabled:opacity-50"
+          >
+            {loading
+              ? "Please wait..."
+              : isSignup
+              ? "Create Account"
+              : "Sign In"}
           </button>
         </form>
 
-        <button onClick={toggleMode}>
-          {isSignup ? "Login" : "Create Account"}
-        </button>
+        <div className="text-center mt-6">
+          <button
+            onClick={toggleMode}
+            className="text-sm text-violet-600 hover:underline font-medium"
+          >
+            {isSignup
+              ? "Already have an account? Sign in"
+              : "New here? Create an account"}
+          </button>
+        </div>
       </div>
     </div>
   );

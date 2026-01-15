@@ -123,7 +123,7 @@ const ChatContainer = () => {
 
       {/* Input */}
       <form
-        className="p-4 flex items-center gap-2 bg-[#1e1e2f]"
+        className="p-4 flex items-center gap-2 bg-[#232331]"
         onSubmit={handleSend}
       >
         <input
@@ -133,16 +133,50 @@ const ChatContainer = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-        <label>
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageSend}
-          />
-          📷
-        </label>
-        <button type="submit">➤</button>
+<label className="relative group cursor-pointer">
+  <input
+    type="file"
+    accept="image/*"
+    className="hidden"
+    onChange={handleImageSend}
+  />
+
+  {/* Camera Button */}
+  <div className="flex items-center justify-center w-11 h-11 rounded-full bg-[#2E2F3E] 
+                  group-hover:bg-[#3B3C4F] transition shadow-md">
+    <span className="text-xl ">📷</span>
+  </div>
+
+  {/* Tooltip */}
+  <span className="absolute -top-9 left-1/2 -translate-x-1/2 
+                   text-xs bg-black/80 text-white px-2 py-1 rounded 
+                   opacity-0 group-hover:opacity-100 transition">
+    Camera
+  </span>
+</label>
+
+
+<button
+  type="submit"
+  className="relative group flex items-center justify-center 
+             w-11 h-11 rounded-full 
+             bg-gradient-to-r from-[#7C3AED] to-[#4F46E5] 
+             text-white shadow-lg 
+             hover:scale-105 active:scale-95 transition"
+>
+  <span className="text-xl">➤</span>
+
+  {/* Tooltip */}
+  <span
+    className="absolute -top-9 left-1/2 -translate-x-1/2 
+               text-xs bg-black/80 text-white px-2 py-1 rounded 
+               opacity-0 group-hover:opacity-100 transition"
+  >
+    Send
+  </span>
+</button>
+
+
       </form>
     </div>
   );
