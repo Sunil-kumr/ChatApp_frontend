@@ -7,7 +7,6 @@ const RightSidebar = () => {
   const { authUser, logout, onlineUsers } = useContext(AuthContext);
   const { selectedUser, messages } = useContext(ChatContext);
 
-  // ✅ hooks are already at top (NO RULES OF HOOKS VIOLATION)
   const mediaImages = useMemo(() => {
     return messages
       .filter((msg) => msg.image)
@@ -16,15 +15,18 @@ const RightSidebar = () => {
       .reverse();
   }, [messages]);
 
-  // Hide RightSidebar if no user selected
   if (!selectedUser) return null;
 
   const isOnline = onlineUsers.includes(selectedUser._id);
 
   return (
-    <div className="h-full w-full bg-[#181A2A]/80 flex flex-col rounded-l-2xl overflow-hidden">
+    <div
+      className="h-full w-full 
+      bg-gradient-to-b from-[#1a1357] via-[#574f7d] to-[#1a1833]
+      flex flex-col rounded-l-2xl overflow-hidden"
+    >
       {/* --- Profile Section --- */}
-      <div className="flex flex-col items-center py-8 border-b border-[#282142]">
+      <div className="flex flex-col items-center py-8 border-b border-white/20">
         <div className="relative">
           <img
             src={selectedUser?.profilePicture || assets.profile_martin}
@@ -32,23 +34,23 @@ const RightSidebar = () => {
             className="w-24 h-24 rounded-full object-cover border-4 border-[#6C63FF] mb-3"
           />
           <span
-            className={`absolute bottom-3 right-3 w-4 h-4 rounded-full border-2 border-[#181A2A] ${
+            className={`absolute bottom-3 right-3 w-4 h-4 rounded-full border-2 border-[#1a1833] ${
               isOnline ? "bg-green-500" : "bg-gray-400"
             }`}
-          ></span>
+          />
         </div>
 
         <span className="text-white font-semibold text-xl mt-2">
           {selectedUser?.fullName || "Unknown User"}
         </span>
 
-        <p className="text-gray-300 text-sm mt-1 px-4 text-center">
+        <p className="text-gray-200 text-sm mt-1 px-4 text-center">
           {selectedUser?.bio || "Hey there! I'm using QuickChat"}
         </p>
       </div>
 
       {/* --- Media Section --- */}
-      <div className="flex-1 flex flex-col px-6 py-4 overflow-y-auto scrollbar-thin scrollbar-thumb-[#6C63FF]/50 scrollbar-track-transparent">
+      <div className="flex-1 flex flex-col px-6 py-4 overflow-y-auto">
         <p className="text-white font-semibold mb-3">Media</p>
 
         {mediaImages.length > 0 ? (
@@ -63,7 +65,7 @@ const RightSidebar = () => {
             ))}
           </div>
         ) : (
-          <p className="text-gray-400 text-sm">No media shared yet</p>
+          <p className="text-gray-300 text-sm">No media shared yet</p>
         )}
       </div>
 
@@ -75,13 +77,17 @@ const RightSidebar = () => {
             alt="You"
             className="w-8 h-8 rounded-full object-cover border border-[#6C63FF]"
           />
-          <p className="text-white text-sm">{authUser?.fullName || "You"}</p>
+          <p className="text-white text-sm">
+            {authUser?.fullName || "You"}
+          </p>
         </div>
 
         <button
           onClick={logout}
-          className="w-full py-2 rounded-full bg-gradient-to-r from-[#a084ee] to-[#6C63FF]
-                     text-white font-semibold text-lg shadow-lg hover:scale-105 transition-transform duration-200"
+          className="w-full py-2 rounded-full 
+          bg-gradient-to-r from-[#52349d] to-[#7471a4]
+          text-white font-semibold text-lg shadow-lg 
+          hover:scale-105 transition-transform duration-200"
         >
           Logout
         </button>

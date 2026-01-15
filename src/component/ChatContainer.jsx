@@ -32,14 +32,13 @@ const ChatContainer = () => {
     isUserAtBottom.current = true;
   };
 
-  // ✅ BASE64 IMAGE SEND (NO MULTER)
   const handleImageSend = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onloadend = async () => {
-      await sendMessage("", reader.result); // base64
+      await sendMessage("", reader.result);
       isUserAtBottom.current = true;
     };
     reader.readAsDataURL(file);
@@ -48,17 +47,19 @@ const ChatContainer = () => {
 
   if (!selectedUser) {
     return (
-      <div className="flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 max-md:hidden">
+      <div className="flex flex-col items-center justify-center gap-2 text-gray-200 bg-gradient-to-b from-[#594bd4] via-[#574f7d] to-[#1a1833] max-md:hidden">
         <img src={assets.logo_icon} className="max-w-16" alt="" />
-        <p className="text-lg font-medium text-white">Chat anytime, anywhere</p>
+        <p className="text-lg font-medium text-white">
+          Chat anytime, anywhere
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex flex-col backdrop-blur-lg relative">
+    <div className="h-full flex flex-col bg-gradient-to-b from-[#2c2678] via-[#574f7d] to-[#1a1833] relative">
       {/* Header */}
-      <div className="flex items-center gap-3 py-3 px-4 border-b border-stone-500 bg-[#1e1e2f] sticky top-0 z-10">
+      <div className="flex items-center gap-3 py-3 px-4 border-b border-white/20 bg-black/20 sticky top-0 z-10 backdrop-blur">
         <img
           src={selectedUser.avatar || assets.profile_martin}
           alt=""
@@ -70,7 +71,7 @@ const ChatContainer = () => {
             className={`w-2 h-2 rounded-full ${
               onlineUsers.includes(selectedUser._id)
                 ? "bg-green-500"
-                : "bg-gray-500"
+                : "bg-gray-400"
             }`}
           />
         </p>
@@ -85,7 +86,7 @@ const ChatContainer = () => {
       {/* Messages */}
       <div
         ref={messageContainerRef}
-        className="flex-1 overflow-y-auto p-3 pb-6 scroll-smooth"
+        className="flex-1 overflow-y-auto p-3 pb-6"
       >
         {messages.map((message, index) => {
           const isMe = message.senderId === authUser._id;
@@ -107,11 +108,11 @@ const ChatContainer = () => {
                     className="max-w-[230px] rounded-lg mb-1"
                   />
                 ) : (
-                  <p className="p-2 text-sm rounded-lg bg-violet-500/30 text-white mb-1">
+                  <p className="p-2 text-sm rounded-lg bg-white/20 text-white mb-1 backdrop-blur">
                     {message.text}
                   </p>
                 )}
-                <p className="text-gray-400 text-xs">
+                <p className="text-gray-300 text-xs">
                   {formatMessageTime(message.createdAt)}
                 </p>
               </div>
@@ -123,7 +124,7 @@ const ChatContainer = () => {
 
       {/* Input */}
       <form
-        className="p-4 flex items-center gap-2 bg-[#232331]"
+        className="p-4 flex items-center gap-2 bg-black/20 backdrop-blur"
         onSubmit={handleSend}
       >
         <input
@@ -133,50 +134,25 @@ const ChatContainer = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-<label className="relative group cursor-pointer">
-  <input
-    type="file"
-    accept="image/*"
-    className="hidden"
-    onChange={handleImageSend}
-  />
 
-  {/* Camera Button */}
-  <div className="flex items-center justify-center w-11 h-11 rounded-full bg-[#2E2F3E] 
-                  group-hover:bg-[#3B3C4F] transition shadow-md">
-    <span className="text-xl ">📷</span>
-  </div>
+        <label className="relative group cursor-pointer">
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageSend}
+          />
+          <div className="flex items-center justify-center w-11 h-11 rounded-full bg-white/10 group-hover:bg-white/20 transition shadow-md">
+            <span className="text-xl">📷</span>
+          </div>
+        </label>
 
-  {/* Tooltip */}
-  <span className="absolute -top-9 left-1/2 -translate-x-1/2 
-                   text-xs bg-black/80 text-white px-2 py-1 rounded 
-                   opacity-0 group-hover:opacity-100 transition">
-    Camera
-  </span>
-</label>
-
-
-<button
-  type="submit"
-  className="relative group flex items-center justify-center 
-             w-11 h-11 rounded-full 
-             bg-gradient-to-r from-[#7C3AED] to-[#4F46E5] 
-             text-white shadow-lg 
-             hover:scale-105 active:scale-95 transition"
->
-  <span className="text-xl">➤</span>
-
-  {/* Tooltip */}
-  <span
-    className="absolute -top-9 left-1/2 -translate-x-1/2 
-               text-xs bg-black/80 text-white px-2 py-1 rounded 
-               opacity-0 group-hover:opacity-100 transition"
-  >
-    Send
-  </span>
-</button>
-
-
+        <button
+          type="submit"
+          className="w-11 h-11 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#4F46E5] text-white shadow-lg hover:scale-105 active:scale-95 transition"
+        >
+          ➤
+        </button>
       </form>
     </div>
   );
